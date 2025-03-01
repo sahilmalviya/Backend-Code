@@ -52,15 +52,17 @@ const userSchema = new Schema(
 )
 //   password encrypt karne k liye 
 userSchema.pre("save", async function (next) {
-    if (this.isModified("password")) return next();
+    if (!this.isModified("password")) return next();
 
     this.password = await bcrypt.hash(this.password, 10)
-    next()
+    next();
 })
 
 // Passwor Check karne k liye 
 userSchema.methods.isPasswordCorrect = async function (password) {
-    return await bcrypt.compare(password, this.password)
+    // console.log(password); // Only for debugging purposes!
+
+    return await bcrypt.compare(password, this.password);
 }
 
 
